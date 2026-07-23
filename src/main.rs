@@ -1,9 +1,9 @@
+use portfolio_risk_analyzer::statistics::calculate_statistics;
 use portfolio_risk_analyzer::models::{
     Asset,
     Portfolio,
     SimulationConfig,
 };
-
 use portfolio_risk_analyzer::simulation::run_simulation;
 
 fn main() {
@@ -47,13 +47,22 @@ fn main() {
         seed: 42,
     };
 
-    let results = run_simulation(
-        &portfolio,
-        &config,
-    );
+    let results = run_simulation(&portfolio, &config);
 
+    let stats = calculate_statistics(&results);
+
+    println!("\nMonte Carlo statistika");
+    println!("----------------------");
     println!("Broj simulacija: {}", results.len());
-
+    println!("Srednja vrijednost: {:.2} €", stats.mean);
+    println!("Medijan: {:.2} €", stats.median);
+    println!("Standardna devijacija: {:.2}", stats.std_dev);
+    println!("5. percentil: {:.2} €", stats.percentile_5);
+    println!("95. percentil: {:.2} €", stats.percentile_95);
+    println!("VaR 95: {:.2} €", stats.var_95);
+    println!("VaR 99: {:.2} €", stats.var_99);
+    println!("CVaR 95: {:.2} €", stats.cvar_95);
+    
     let first = &results[0];
     println!(
         "Prvi rezultat: {:.2} €",
