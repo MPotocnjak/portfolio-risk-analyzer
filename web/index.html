@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Risk Analyzer - WASM Test</title>
+</head>
+<body>
+    <h1>Portfolio Risk Analyzer</h1>
+    <p id="status">Učitavanje WASM-a...</p>
+    <script type="module">
+        import init, {
+            greet
+        } from "./pkg/portfolio_risk_analyzer.js";
+        async function main() {
+            await init();
+            const message = greet();
+            document.getElementById("status").textContent = message;
+            console.log(message);
+        }
+        main();
+    </script>
+</body>
+</html>
