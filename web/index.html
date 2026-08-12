@@ -4,13 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Portfolio Risk Analyzer</title>
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
     <h1>Portfolio Risk Analyzer</h1>
-    <p id="status">Učitavanje WASM-a...</p>
+    <p>Monte Carlo simulator portfelja</p>
+
+    <h2>Parametri simulacije</h2>
+    <div class="simulation-fields">
+        <label>Početna investicija (€): <input id="investment" type="number" value="10000"></label>
+        <label>Godine: <input id="years" type="number" value="20"></label>
+        <label>Broj simulacija: <input id="simulations" type="number" value="10000"></label>
+    </div>
+
+    <p id="simulationError"></p>
+
+    <h2>Portfelj</h2>
+    <div class="asset-fields">
+        <div class="asset-header">
+            <span>Imovina</span><span>Udio (%)</span><span>Prinos (%)</span><span>Volatilnost (%)</span>
+        </div>
+
+        <div class="asset-row">
+            <span>Dionice</span>
+            <input id="weight-stocks" type="number" value="50" step="1">
+            <input id="return-stocks" type="number" value="8" step="0.1">
+            <input id="volatility-stocks" type="number" value="15" step="0.1">
+        </div>
+
+        <div class="asset-row">
+            <span>Obveznice</span>
+            <input id="weight-bonds" type="number" value="20" step="1">
+            <input id="return-bonds" type="number" value="3" step="0.1">
+            <input id="volatility-bonds" type="number" value="5" step="0.1">
+        </div>
+
+        <div class="asset-row">
+            <span>Zlato</span>
+            <input id="weight-gold" type="number" value="20" step="1">
+            <input id="return-gold" type="number" value="5" step="0.1">
+            <input id="volatility-gold" type="number" value="12" step="0.1">
+        </div>
+
+        <div class="asset-row">
+            <span>Kripto</span>
+            <input id="weight-crypto" type="number" value="10" step="1">
+            <input id="return-crypto" type="number" value="15" step="0.1">
+            <input id="volatility-crypto" type="number" value="50" step="0.1">
+        </div>
+        
+        <p id="portfolioError"></p>
+    </div>
 
     <button id="runButton">Pokreni simulaciju</button>
-    <div id="statistics"></div>
+    <div id="simulationResults"></div>
 
     <script type="module" src="./app.js"></script>
 </body>

@@ -5,11 +5,6 @@ use crate::simulation::run_simulation;
 use crate::statistics::calculate_statistics;
 
 #[wasm_bindgen]
-pub fn greet() -> String {
-    "Portfolio Risk Analyzer WASM radi!".to_string()
-}
-
-#[wasm_bindgen]
 pub fn run_monte_carlo(portfolio: JsValue, config: JsValue) -> Result<JsValue, JsValue> {
     let portfolio: Portfolio = from_value(portfolio).map_err(|e| JsValue::from_str(&e.to_string()))?;
     let config: SimulationConfig = from_value(config).map_err(|e| JsValue::from_str(&e.to_string()))?;

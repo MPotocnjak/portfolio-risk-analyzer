@@ -1,0 +1,95 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 40px;
+    color: #222;
+    max-width: 800px;
+    margin: auto;
+}
+
+h1 {
+    color: #2563eb;
+}
+
+.simulation-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: fit-content;
+}
+
+.simulation-fields label {
+    display: grid;
+    grid-template-columns: 180px 120px;
+    align-items: center;
+}
+
+.simulation-fields input {
+    width: 120px;
+    box-sizing: border-box;
+}
+
+.asset-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 700px;
+}
+
+.asset-header, .asset-row {
+    display: grid;
+    grid-template-columns: 130px repeat(3, 110px);
+    gap: 10px;
+    align-items: center;
+}
+
+.asset-header {
+    font-weight: bold;
+}
+
+.asset-row input {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+#simulationError, #portfolioError {
+    color: #dc2626;
+    margin: 8px 0;
+}
+
+#runButton {
+    margin-top: 16px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    background-color: #2563eb;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+#runButton:hover {
+    background-color: #1d4ed8;
+}
+
+#runButton:active {
+    transform: scale(0.98);
+}
+
+@media (max-width: 500px) {
+    body {
+        margin: 20px;
+    }
+
+    .simulation-fields label {
+        grid-template-columns: 150px 100px;
+    }
+
+    .simulation-fields input {
+        width: 100px;
+    }
+
+    .asset-fields {
+        overflow-x: auto;
+    }
+}
