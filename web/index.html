@@ -9,38 +9,42 @@
     <h1>Portfolio Risk Analyzer</h1>
     <p id="status">Učitavanje WASM-a...</p>
 
-    <input id="numberInput" type="number" placeholder="Upiši broj">
-    <button id="doubleButton">× 2</button>
+    <button id="runButton">Pokreni simulaciju</button>
     <p id="result"></p>
 
-    <input id="investment" type="number" value="10000" placeholder="Početna investicija">
-    <input id="years" type="number" value="20" placeholder="Godine">
-    <input id="simulations" type="number" value="10000" placeholder="Simulacije">
-    <button id="testButton">Testiraj konfiguraciju</button>
-    <p id="configResult"></p>
-
     <script type="module">
-        import init, { greet, double, test_config } from "./pkg/portfolio_risk_analyzer.js";
-
+        import init, { greet, run_monte_carlo } from "./pkg/portfolio_risk_analyzer.js";
+    
         async function main() {
             await init();
             document.getElementById("status").textContent = greet();
-
-            document.getElementById("doubleButton").addEventListener("click", () => {
-                const value = Number(document.getElementById("numberInput").value);
-                const result = double(value);
-                document.getElementById("result").textContent = `Rezultat: ${result}`;
-            });
-
-            document.getElementById("testButton").addEventListener("click", () => {
-                const investment = Number(document.getElementById("investment").value);
-                const years = Number(document.getElementById("years").value);
-                const simulations = Number(document.getElementById("simulations").value);
-                const result = test_config(investment, years, simulations);
-                document.getElementById("configResult").textContent = `Rezultat iz Rusta: ${result}`;
+    
+            document.getElementById("runButton").addEventListener("click", () => {
+                const portfolio = {
+                    assets: [
+                        { name: "Dionice", weight: 0.50, expected_return: 0.08, volatility: 0.15 },
+                        { name: "Obveznice", weight: 0.20, expected_return: 0.03, volatility: 0.05 },
+                        { name: "Zlato", weight: 0.20, expected_return: 0.05, volatility: 0.12 },
+                        { name: "Kripto", weight: 0.10, expected_return: 0.15, volatility: 0.50 }
+                    ]
+                };
+    
+                const config = {
+                    initial_investment: 10000,
+                    years: 20,
+                    simulations: 10000,
+                    seed: 42
+                };
+    
+                const results = run_monte_carlo(portfolio, config);
+    
+                document.getElementById("result").textContent =
+                    `Dobiveno rezultata: ${results.length}`;
+    
+                console.log(results);
             });
         }
-
+    
         main();
     </script>
 </body>
