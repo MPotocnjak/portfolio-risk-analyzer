@@ -8,16 +8,39 @@
 <body>
     <h1>Portfolio Risk Analyzer</h1>
     <p id="status">Učitavanje WASM-a...</p>
+
+    <input id="numberInput" type="number" placeholder="Upiši broj">
+    <button id="doubleButton">× 2</button>
+    <p id="result"></p>
+
+    <input id="investment" type="number" value="10000" placeholder="Početna investicija">
+    <input id="years" type="number" value="20" placeholder="Godine">
+    <input id="simulations" type="number" value="10000" placeholder="Simulacije">
+    <button id="testButton">Testiraj konfiguraciju</button>
+    <p id="configResult"></p>
+
     <script type="module">
-        import init, {
-            greet
-        } from "./pkg/portfolio_risk_analyzer.js";
+        import init, { greet, double, test_config } from "./pkg/portfolio_risk_analyzer.js";
+
         async function main() {
             await init();
-            const message = greet();
-            document.getElementById("status").textContent = message;
-            console.log(message);
+            document.getElementById("status").textContent = greet();
+
+            document.getElementById("doubleButton").addEventListener("click", () => {
+                const value = Number(document.getElementById("numberInput").value);
+                const result = double(value);
+                document.getElementById("result").textContent = `Rezultat: ${result}`;
+            });
+
+            document.getElementById("testButton").addEventListener("click", () => {
+                const investment = Number(document.getElementById("investment").value);
+                const years = Number(document.getElementById("years").value);
+                const simulations = Number(document.getElementById("simulations").value);
+                const result = test_config(investment, years, simulations);
+                document.getElementById("configResult").textContent = `Rezultat iz Rusta: ${result}`;
+            });
         }
+
         main();
     </script>
 </body>
