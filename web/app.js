@@ -1,4 +1,5 @@
 import init, { run_monte_carlo } from "./pkg/portfolio_risk_analyzer.js";
+import { drawDistribution } from "./charts.js";
 
 // Formatiranje prikaza iznosa u x.xxx.xxx,xx €
 const formatEuro = value => new Intl.NumberFormat("hr-HR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value) + " €";
@@ -94,15 +95,19 @@ async function main() {
 
         simulationResults.innerHTML = `
             <h2>Monte Carlo rezultati</h2>
-            <p>Srednja vrijednost: ${formatEuro(statistics.get("mean"))}</p>
-            <p>Medijan: ${formatEuro(statistics.get("median"))}</p>
-            <p>Standardna devijacija: ${formatEuro(statistics.get("std_dev"))}</p>
-            <p>5. percentil: ${formatEuro(statistics.get("percentile_5"))}</p>
-            <p>95. percentil: ${formatEuro(statistics.get("percentile_95"))}</p>
-            <p>VaR 95: ${formatEuro(statistics.get("var_95"))}</p>
-            <p>VaR 99: ${formatEuro(statistics.get("var_99"))}</p>
-            <p>CVaR 95: ${formatEuro(statistics.get("cvar_95"))}</p>
+            <div class="statistics-grid">
+                <div><span>Srednja vrijednost: </span><strong>${formatEuro(statistics.get("mean"))}</strong></div>
+                <div><span>Medijan: </span><strong>${formatEuro(statistics.get("median"))}</strong></div>
+                <div><span>Standardna devijacija: </span><strong>${formatEuro(statistics.get("std_dev"))}</strong></div>
+                <div><span>5. percentil: </span><strong>${formatEuro(statistics.get("percentile_5"))}</strong></div>
+                <div><span>95. percentil: </span><strong>${formatEuro(statistics.get("percentile_95"))}</strong></div>
+                <div><span>VaR 95: </span><strong>${formatEuro(statistics.get("var_95"))}</strong></div>
+                <div><span>VaR 99: </span><strong>${formatEuro(statistics.get("var_99"))}</strong></div>
+                <div><span>CVaR 95: </span><strong>${formatEuro(statistics.get("cvar_95"))}</strong></div>
+            </div>
         `;
+
+        drawDistribution(results);
 
         console.log(output);
     });
