@@ -3,49 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio Risk Analyzer - WASM Test</title>
+    <title>Portfolio Risk Analyzer</title>
 </head>
 <body>
     <h1>Portfolio Risk Analyzer</h1>
     <p id="status">Učitavanje WASM-a...</p>
 
     <button id="runButton">Pokreni simulaciju</button>
-    <p id="result"></p>
+    <div id="statistics"></div>
 
-    <script type="module">
-        import init, { greet, run_monte_carlo } from "./pkg/portfolio_risk_analyzer.js";
-    
-        async function main() {
-            await init();
-            document.getElementById("status").textContent = greet();
-    
-            document.getElementById("runButton").addEventListener("click", () => {
-                const portfolio = {
-                    assets: [
-                        { name: "Dionice", weight: 0.50, expected_return: 0.08, volatility: 0.15 },
-                        { name: "Obveznice", weight: 0.20, expected_return: 0.03, volatility: 0.05 },
-                        { name: "Zlato", weight: 0.20, expected_return: 0.05, volatility: 0.12 },
-                        { name: "Kripto", weight: 0.10, expected_return: 0.15, volatility: 0.50 }
-                    ]
-                };
-    
-                const config = {
-                    initial_investment: 10000,
-                    years: 20,
-                    simulations: 10000,
-                    seed: 42
-                };
-    
-                const results = run_monte_carlo(portfolio, config);
-    
-                document.getElementById("result").textContent =
-                    `Dobiveno rezultata: ${results.length}`;
-    
-                console.log(results);
-            });
-        }
-    
-        main();
-    </script>
+    <script type="module" src="./app.js"></script>
 </body>
 </html>

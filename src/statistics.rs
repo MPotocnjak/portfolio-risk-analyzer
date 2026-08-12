@@ -1,7 +1,8 @@
 use crate::models::SimulationResult;
+use serde::Serialize;
 
 /// Statistički pokazatelji Monte Carlo simulacije.
-#[derive(Debug)]
+#[derive(Debug, Serialize)]
 pub struct Statistics {
     pub mean: f64,
     pub median: f64,
