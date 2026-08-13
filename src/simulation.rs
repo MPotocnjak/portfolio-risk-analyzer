@@ -24,6 +24,8 @@ pub fn run_simulation(
 
     for _ in 0..config.simulations {
         let mut portfolio_value = config.initial_investment;
+        let mut yearly_values = Vec::with_capacity(config.years as usize + 1);
+        yearly_values.push(portfolio_value);
 
         for _year in 0..config.years {
             let mut yearly_return = 0.0;
@@ -44,11 +46,13 @@ pub fn run_simulation(
             }
 
             portfolio_value *= 1.0 + yearly_return;
+            yearly_values.push(portfolio_value);
         }
 
         results.push(
             SimulationResult {
                 final_value: portfolio_value,
+                yearly_values,
             }
         );
     }

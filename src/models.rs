@@ -43,4 +43,7 @@ pub struct SimulationConfig {
 pub struct SimulationResult {
     /// Završna vrijednost portfelja
     pub final_value: f64,
+    
+    /// Vrijednost portfelja za svaku godinu
+    pub yearly_values: Vec<f64>,
 }

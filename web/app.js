@@ -1,5 +1,5 @@
 import init, { run_monte_carlo } from "./pkg/portfolio_risk_analyzer.js";
-import { drawDistribution } from "./charts.js";
+import { drawDistribution, drawSimulationPaths } from "./charts.js";
 
 // Formatiranje prikaza iznosa u x.xxx.xxx,xx €
 const formatEuro = value => new Intl.NumberFormat("hr-HR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(value) + " €";
@@ -108,8 +108,12 @@ async function main() {
         `;
 
         drawDistribution(results);
+        drawSimulationPaths(results);
 
-        console.log(output);
+        //console.log(output);
+        //console.log(results[0]);
+        console.log(results[0].get("yearly_values"));
+        console.log("Konzola logira!");
     });
 }
 
