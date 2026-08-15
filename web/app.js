@@ -79,6 +79,13 @@ async function main() {
                 { name: "Obveznice", weight: weights[1] / 100, expected_return: returns[1] / 100, volatility: volatilities[1] / 100 },
                 { name: "Zlato", weight: weights[2] / 100, expected_return: returns[2] / 100, volatility: volatilities[2] / 100 },
                 { name: "Kripto", weight: weights[3] / 100, expected_return: returns[3] / 100, volatility: volatilities[3] / 100 }
+            ],
+
+            correlations: [
+                [1.00, -0.20,  0.10,  0.50],
+                [-0.20, 1.00,  0.20,  0.25],
+                [0.10,  0.20,  1.00,  0.05],
+                [0.50,  0.25,  0.05,  1.00]
             ]
         };
 
@@ -89,7 +96,15 @@ async function main() {
             seed: 42
         };
 
-        const output = run_monte_carlo(portfolio, config);
+        let output;
+        try {
+            output = run_monte_carlo(portfolio, config);
+        } catch (error) {
+            const message = typeof error === "string" ? error : error?.message || String(error);
+            portfolioError.textContent = message;
+            return;
+        }
+
         const results = output.get("results");
         const statistics = output.get("statistics");
 
