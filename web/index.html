@@ -58,6 +58,19 @@
     </div>
 
     <button id="runButton">Pokreni simulaciju</button>
+    <button id="benchmarkButton">Pokreni WASM test</button>
+
+    <div id="benchmarkResults"></div>
+    <div id="benchmarkProgress" class="benchmark-progress" hidden>
+        <div class="benchmark-progress-header">
+            <span id="benchmarkProgressText">Pokretanje WASM benchmarka...</span>
+            <span id="benchmarkProgressPercent">0%</span>
+        </div>
+        <div class="progress-bar">
+            <div id="benchmarkProgressFill"></div>
+        </div>
+    </div>
+
     <div id="simulationResults"></div>
 
     <canvas id="distributionChart"></canvas>

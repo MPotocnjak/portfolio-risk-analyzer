@@ -119,3 +119,82 @@ h1 {
     font-size: 20px;
     color: #1e293b;
 }
+
+#benchmarkButton {
+    margin-top: 10px;
+    margin-left: 8px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    background-color: #475569;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+#benchmarkButton:hover {
+    background-color: #334155;
+}
+
+#benchmarkButton:active {
+    transform: scale(0.98);
+}
+
+#benchmarkResults {
+    margin-top: 20px;
+}
+
+.benchmark-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 12px;
+}
+
+.benchmark-table th,
+.benchmark-table td {
+    padding: 10px;
+    border: 1px solid #e5e7eb;
+    text-align: right;
+}
+
+.benchmark-table th {
+    background-color: #f1f5f9;
+}
+
+.benchmark-table th:first-child,
+.benchmark-table td:first-child {
+    text-align: left;
+}
+
+.benchmark-progress {
+    margin-top: 20px;
+    padding: 16px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background-color: #f8fafc;
+}
+
+.benchmark-progress-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    color: #475569;
+    font-size: 14px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 18px;
+    background-color: #e2e8f0;
+    border-radius: 9px;
+    overflow: hidden;
+}
+
+#benchmarkProgressFill {
+    width: 0%;
+    height: 100%;
+    background-color: #475569;
+    border-radius: 9px;
+    transition: width 0.15s ease;
+}
