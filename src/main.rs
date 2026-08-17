@@ -49,14 +49,14 @@ fn main() {
 
     let config = SimulationConfig {
         initial_investment: 10_000.0,
-        years: 20,
-        simulations: 10_000,
+        years: 10,
+        simulations: 100_000,
         seed: 42,
     };
 
     let results = run_simulation(&portfolio, &config).expect("Simulacija nije uspjela.");
 
-    let stats = calculate_statistics(&results);
+    let stats = calculate_statistics(&results, config.initial_investment);
 
     println!("\nMonte Carlo statistika");
     println!("----------------------");

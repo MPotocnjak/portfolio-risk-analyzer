@@ -216,19 +216,28 @@ async function benchmarkWasm(portfolio, config) {
     return benchmarkResults;
 }
 
+function getRiskClass(value) {
+    if (value > 0) return "risk-positive";
+    if (value < 0) return "risk-negative";
+    return "";
+}
+
 async function main() {
     await init();
     
     const simulationResults = document.getElementById("simulationResults");
+    const simulationParameters = document.getElementById("simulationParameters");
     const benchmarkResultsElement = document.getElementById("benchmarkResults");
+    const runButton = document.getElementById("runButton");
     const benchmarkButton = document.getElementById("benchmarkButton");
     const benchmarkProgress = document.getElementById("benchmarkProgress");
     
     // ==========================================
     // POKRENI SIMULACIJU
     // ==========================================
-    document.getElementById("runButton").addEventListener("click", () => {
+    document.getElementById("runButton").addEventListener("click", async () => {
         simulationResults.innerHTML = "";
+        simulationParameters.hidden = true;
         benchmarkResultsElement.innerHTML = "";
         benchmarkProgress.hidden = true;
         clearCharts();
@@ -238,6 +247,33 @@ async function main() {
         const portfolio = createPortfolio(values);
         const config = createSimulationConfig(values);
 
+        document.getElementById("resultInvestment").textContent = formatEuro(values.investment);
+        document.getElementById("resultYears").textContent = values.years;
+        document.getElementById("resultSimulations").textContent = values.simulations.toLocaleString("hr-HR");
+        document.getElementById("resultSeed").textContent = config.seed;
+        document.getElementById("assetParameters").innerHTML =
+            portfolio.assets.map(asset => `
+                <tr>
+                    <td>${asset.name}</td>
+                    <td>${(asset.weight * 100).toFixed(2)}%</td>
+                    <td>${(asset.expected_return * 100).toFixed(2)}%</td>
+                    <td>${(asset.volatility * 100).toFixed(2)}%</td>
+                </tr>
+            `).join("");
+        document.getElementById("correlationParameters").innerHTML =
+            portfolio.correlations.map((row, i) => `
+                <tr>
+                    <th>${portfolio.assets[i].name}</th>
+                    ${row.map(value => `<td>${value.toFixed(2)}</td>`).join("")}
+                </tr>
+            `).join("");
+
+        runButton.disabled = true;
+        const simulationLoading = document.getElementById("simulationLoading");
+        simulationLoading.hidden = false;
+
+        await new Promise(resolve => setTimeout(resolve, 0));
+
         const wasmStart = performance.now();
         
         let output;
@@ -245,7 +281,9 @@ async function main() {
             output = run_monte_carlo(portfolio, config);
         } catch (error) {
             const message = typeof error === "string" ? error : error?.message || String(error);
-            portfolioError.textContent = message; // document.getElementById("portfolioError").textContent = message;
+            document.getElementById("portfolioError").textContent = message;
+            runButton.disabled = false;
+            simulationLoading.hidden = true;
             return;
         }
 
@@ -259,24 +297,59 @@ async function main() {
         simulationResults.innerHTML = `
             <h2>Monte Carlo rezultati</h2>
             <div class="statistics-grid">
-                <div><span>Srednja vrijednost: </span><strong>${formatEuro(statistics.get("mean"))}</strong></div>
-                <div><span>Medijan: </span><strong>${formatEuro(statistics.get("median"))}</strong></div>
-                <div><span>Standardna devijacija: </span><strong>${formatEuro(statistics.get("std_dev"))}</strong></div>
-                <div><span>5. percentil: </span><strong>${formatEuro(statistics.get("percentile_5"))}</strong></div>
-                <div><span>95. percentil: </span><strong>${formatEuro(statistics.get("percentile_95"))}</strong></div>
-                <div><span>VaR 95: </span><strong>${formatEuro(statistics.get("var_95"))}</strong></div>
-                <div><span>VaR 99: </span><strong>${formatEuro(statistics.get("var_99"))}</strong></div>
-                <div><span>CVaR 95: </span><strong>${formatEuro(statistics.get("cvar_95"))}</strong></div>
+                <div><span class="statistic-label">
+                    Aritmetička sredina: 
+                    <span class="tooltip">Prosječna završna vrijednost portfelja kroz sve provedene simulacije.</span></span>
+                    <strong>${formatEuro(statistics.get("mean"))}</strong></div>
+                <div><span class="statistic-label">
+                    Medijan: 
+                    <span class="tooltip">Srednja vrijednost svih simuliranih završnih vrijednosti. Polovica rezultata je ispod, a polovica iznad ove vrijednosti.</span></span>
+                    <strong>${formatEuro(statistics.get("median"))}</strong></div>
+                <div><span class="statistic-label">
+                    Standardna devijacija: 
+                    <span class="tooltip">Mjera raspršenosti završnih vrijednosti oko njihove srednje vrijednosti. Veća vrijednost označava veću varijabilnost rezultata.</span></span>
+                    <strong>${formatEuro(statistics.get("std_dev"))}</strong></div>
+                <div><span class="statistic-label">
+                    5. percentil: 
+                    <span class="tooltip">Vrijednost ispod koje se nalazi približno 5% simuliranih završnih vrijednosti.</span></span>
+                    <strong>${formatEuro(statistics.get("percentile_5"))}</strong></div>
+                <div><span class="statistic-label">
+                    95. percentil: 
+                    <span class="tooltip">Vrijednost ispod koje se nalazi približno 95% simuliranih završnih vrijednosti.</span></span>
+                    <strong>${formatEuro(statistics.get("percentile_95"))}</strong></div>
+                <div><span class="statistic-label">
+                    VaR 95: 
+                    <span class="tooltip">
+                        Maksimalni očekivani gubitak portfelja pri razini pouzdanosti od 95%.
+                        Pozitivna vrijednost znači da ni u najgorih 5% ishoda nije ostvaren gubitak.
+                        Negativna vrijednost znači da u približno 5% simulacija gubitak može biti veći od ove vrijednosti.
+                    </span></span>
+                    <strong class="${getRiskClass(statistics.get("var_95"))}">${formatEuro(statistics.get("var_95"))}</strong></div>
+                <div><span class="statistic-label">
+                    VaR 99: 
+                    <span class="tooltip">
+                        Maksimalni očekivani gubitak portfelja pri razini pouzdanosti od 99%.
+                        Pozitivna vrijednost znači da ni u najgorih 1% ishoda nije ostvaren gubitak.
+                        Negativna vrijednost znači da u približno 1% simulacija gubitak može biti veći od ove vrijednosti.
+                    </span></span>
+                    <strong class="${getRiskClass(statistics.get("var_99"))}">${formatEuro(statistics.get("var_99"))}</strong></div>
+                <div><span class="statistic-label">
+                    CVaR 95: 
+                    <span class="tooltip">
+                        Prosječna promjena vrijednosti portfelja u najgorih 5% simulacija.
+                        Pozitivna vrijednost znači da ni u tom najgorem dijelu distribucije u prosjeku nije ostvaren gubitak.
+                        Negativna vrijednost predstavlja prosječni potencijalni gubitak u najgorih 5% ishoda.
+                    </span></span>
+                    <strong class="${getRiskClass(statistics.get("cvar_95"))}">${formatEuro(statistics.get("cvar_95"))}</strong></div>
             </div>
         `;
 
+        simulationParameters.hidden = false;
         drawDistribution(results);
         drawSimulationPaths(results);
 
-        //console.log(output);
-        //console.log(results[0]);
-        //console.log(results[0].get("yearly_values"));
-        //console.log("Konzola logira!");
+        runButton.disabled = false;
+        simulationLoading.hidden = true;        
     });
 
     // ==========================================
@@ -284,8 +357,14 @@ async function main() {
     // ==========================================
     document.getElementById("benchmarkButton").addEventListener("click", async () => {
         simulationResults.innerHTML = "";
+        simulationParameters.hidden = true;
         benchmarkResultsElement.innerHTML = "";
         clearCharts();
+
+        const values = getInputValues();
+        if (!validateInputs(values)) { return; }
+        const portfolio = createPortfolio(values);
+        const config = createSimulationConfig(values, 10000);    
 
         benchmarkButton.disabled = true;
         benchmarkProgress.hidden = false;
@@ -293,15 +372,10 @@ async function main() {
         document.getElementById("benchmarkProgressPercent").textContent = "0%";
         document.getElementById("benchmarkProgressText").textContent = "Pokretanje WASM benchmarka...";
 
-        const values = getInputValues();
-        if (!validateInputs(values)) { return; }
-        const portfolio = createPortfolio(values);
-        const config = createSimulationConfig(values, 10000);    
-
         const benchmarkResults = await benchmarkWasm(portfolio, config);
         benchmarkResultsElement.innerHTML = `
             <h2>WASM benchmark</h2>
-            <table class="benchmark-table">
+            <table>
                 <thead>
                     <tr>
                         <th>Broj simulacija</th>
