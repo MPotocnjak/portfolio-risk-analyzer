@@ -14,8 +14,8 @@
     <h2>Parametri simulacije</h2>
     <div class="simulation-fields">
         <label>Početna investicija (€): <input id="investment" type="number" value="10000"></label>
-        <label>Godine: <input id="years" type="number" value="20"></label>
-        <label>Broj simulacija: <input id="simulations" type="number" value="10000"></label>
+        <label>Godine: <input id="years" type="number" value="10"></label>
+        <label>Broj simulacija: <input id="simulations" type="number" value="100000"></label>
     </div>
 
     <p id="simulationError"></p>
@@ -58,7 +58,47 @@
     </div>
 
     <button id="runButton">Pokreni simulaciju</button>
+    <button id="benchmarkButton">Pokreni WASM test</button>
+
+    <div id="benchmarkResults"></div>
+    <div id="benchmarkProgress" class="benchmark-progress" hidden>
+        <div class="benchmark-progress-header">
+            <span id="benchmarkProgressText">Pokretanje WASM benchmarka...</span>
+            <span id="benchmarkProgressPercent">0%</span>
+        </div>
+        <div class="progress-bar">
+            <div id="benchmarkProgressFill"></div>
+        </div>
+    </div>
+
+    <div id="simulationLoading" class="loading" hidden>
+        <div class="spinner"></div>
+        <span>Pokretanje Monte Carlo simulacije...</span>
+    </div>
+
     <div id="simulationResults"></div>
+
+    <details id="simulationParameters" hidden>
+        <summary>Ulazni parametri simulacije</summary>
+        <div class="parameters-grid">
+            <div><span>Početna investicija:</span><strong id="resultInvestment"></strong></div>
+            <div><span>Broj godina:</span><strong id="resultYears"></strong></div>
+            <div><span>Broj simulacija:</span><strong id="resultSimulations"></strong></div>
+            <div><span>Seed:</span><strong id="resultSeed"></strong></div>
+        </div>
+    
+        <h3>Imovina</h3>
+        <table>
+            <thead><tr><th>Imovina</th><th>Udio</th><th>Očekivani prinos</th><th>Volatilnost</th></tr></thead>
+            <tbody id="assetParameters"></tbody>
+        </table>
+    
+        <h3>Korelacijska matrica</h3>
+        <table>
+            <thead><tr><th></th><th>Dionice</th><th>Obveznice</th><th>Zlato</th><th>Kripto</th></tr></thead>
+            <tbody id="correlationParameters"></tbody>
+        </table>
+    </details>
 
     <canvas id="distributionChart"></canvas>
 

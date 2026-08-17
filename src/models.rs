@@ -20,6 +20,9 @@ pub struct Asset {
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Portfolio {
     pub assets: Vec<Asset>,
+
+    /// Matrica korelacija između imovina.
+    pub correlations: Vec<Vec<f64>>,
 }
 
 /// Parametri Monte Carlo simulacije.
@@ -43,7 +46,7 @@ pub struct SimulationConfig {
 pub struct SimulationResult {
     /// Završna vrijednost portfelja
     pub final_value: f64,
-    
+
     /// Vrijednost portfelja za svaku godinu
     pub yearly_values: Vec<f64>,
 }

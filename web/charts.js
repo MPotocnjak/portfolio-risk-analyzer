@@ -284,3 +284,15 @@ export function drawSimulationPaths(results, selected = null, selectionLabel = n
         }
     });
 }
+
+export function clearCharts() {
+    if (distributionChart) {
+        distributionChart.destroy();
+        distributionChart = null;
+    }
+
+    if (pathsChart) {
+        pathsChart.destroy();
+        pathsChart = null;
+    }
+}

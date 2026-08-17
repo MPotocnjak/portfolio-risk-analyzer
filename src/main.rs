@@ -38,18 +38,25 @@ fn main() {
                 volatility: 0.50,
             },
         ],
+
+        correlations: vec![
+            vec![1.00, -0.20, 0.10, 0.50],
+            vec![-0.20, 1.00, 0.20, 0.25],
+            vec![0.10, 0.20, 1.00, 0.05],
+            vec![0.50, 0.25, 0.05, 1.00],
+        ],
     };
 
     let config = SimulationConfig {
         initial_investment: 10_000.0,
-        years: 20,
-        simulations: 10_000,
+        years: 10,
+        simulations: 100_000,
         seed: 42,
     };
 
-    let results = run_simulation(&portfolio, &config);
+    let results = run_simulation(&portfolio, &config).expect("Simulacija nije uspjela.");
 
-    let stats = calculate_statistics(&results);
+    let stats = calculate_statistics(&results, config.initial_investment);
 
     println!("\nMonte Carlo statistika");
     println!("----------------------");
