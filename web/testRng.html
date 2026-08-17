@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>RNG test</title>
+</head>
+<body>
+
+<script type="module">
+    import { ChaCha8Rng } from "./jsRng.js";
+
+    const rng = new ChaCha8Rng(12345);
+
+    const values = [];
+
+    for (let i = 0; i < 10; i++) {
+        values.push(rng.nextUint32());
+    }
+
+    console.log(values);
+</script>
+
+</body>
+</html>
