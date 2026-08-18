@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript vs WASM Benchmark</title>
+    <link rel="stylesheet" href="./benchmarkStyle.css">
+</head>
+<body>
+    <div class="container">
+    <h1>JavaScript vs WebAssembly Benchmark</h1>
+    <div class="subtitle">
+        Usporedba performansi JavaScript i WebAssembly implementacija Monte Carlo simulacije.
+    </div>
+
+    <div class="card">
+        <h2>Parametri simulacije</h2>
+        <div class="parameters">
+            <div class="parameter">
+                <div class="parameter-label">Početna investicija (€)</div>
+                <div class="parameter-value" id="initialInvestment"></div>
+            </div>
+            <div class="parameter">
+                <div class="parameter-label">Broj godina</div>
+                <div class="parameter-value" id="years"></div>
+            </div>
+            <!-- <div class="parameter">
+                <div class="parameter-label">Simulation seed</div>
+                <div class="parameter-value" id="simulationSeed"></div>
+            </div>
+
+            <div class="parameter">
+                <div class="parameter-label">Benchmark seed</div>
+                <div class="parameter-value" id="benchmarkSeed"></div>
+            </div>
+             -->
+             <div class="parameter">
+                <div class="parameter-label">Broj pripremnih pokretanja</div>
+                <div class="parameter-value" id="warmupRuns"></div>
+            </div>
+            <div class="parameter">
+                <div class="parameter-label">Broj izvođenja po mjerenju</div>
+                <div class="parameter-value" id="benchmarkRuns"></div>
+            </div>
+        </div>
+
+        <div class="portfolio-section">
+            <h3>Portfelj</h3>
+            <table class="portfolio-table">
+                <thead>
+                    <tr>
+                        <th>Imovina</th>
+                        <th>Udio</th>
+                        <th>Prinos</th>
+                        <th>Volatilnost</th>
+                    </tr>
+                </thead>
+                <tbody id="portfolioBody"></tbody>
+            </table>
+        </div>
+
+        <div class="portfolio-section">
+            <h3>Korelacijska matrica</h3>
+            <div class="matrix-wrapper">
+                <table class="matrix" id="correlationMatrix"></table>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Status testiranja</h2>
+        <button id="startButton">Pokreni testiranje</button>
+        <div class="progress-container">
+            <div class="progress-bar-background">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+            <div class="progress-text" id="progressText"></div>
+            <div class="status" id="statusText"></div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>Rezultati usporedbe</h2>
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th>Broj simulacija</th>
+                    <th>JS prosjek</th>
+                    <th>WASM prosjek</th>
+                    <th>JS medijan</th>
+                    <th>WASM medijan</th>
+                    <th>JS std. dev.</th>
+                    <th>WASM std. dev.</th>
+                    <th>Ubrzanje</th>
+                </tr>
+            </thead>
+            <tbody id="resultsBody"></tbody>
+        </table>
+    </div>
+
+    <div class="card" id="completionCard" style="display:none;">
+        <h2>Testiranje završeno</h2>
+        <p class="completed">Testiranje je uspješno završeno.</p>
+        <p>Ukupno vrijeme testiranja: <strong id="totalTime"></strong></p>
+    </div>
+    </div>
+
+    <script type="module" src="./benchmarkJS.js"></script>
+</body>
+</html>
