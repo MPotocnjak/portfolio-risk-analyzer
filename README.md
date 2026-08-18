@@ -25,29 +25,33 @@ Na temelju dobivenih rezultata računaju se statistike rizika, uključujući:
 - prosječnu završnu vrijednost
 - medijan
 - standardnu devijaciju
-- 5. percentil
-- 95. percentil
+- 5 percentil
+- 95 percentil
 - VaR
 - CVaR
 
 ## Usporedba performansi
 Projekt sadrži posebnu stranicu za mjerenje i usporedbu performansi:
+```text
 web/benchmark.html
+```
 
 Benchmark uspoređuje vrijeme izvođenja JavaScript i WebAssembly implementacije za različite veličine Monte Carlo simulacije.
 Trenutno se testiraju sljedeće veličine:
-100
-1 000
-10 000
-50 000
-100 000
+- 100
+- 1 000
+- 10 000
+- 50 000
+- 100 000
 
 Za svaku veličinu simulacije provodi se više zagrijavajućih pokretanja i više ponavljanja mjerenja.
+
 Benchmark prikazuje:
 * prosječno vrijeme izvođenja
 * medijan
 * standardnu devijaciju
 * ubrzanje WebAssembly implementacije u odnosu na JavaScript
+
 Za osiguravanje reproducibilnosti koristi se deterministički generator slučajnih brojeva i fiksno sjeme.
 
 ### Rust / WebAssembly
@@ -59,6 +63,7 @@ Rust implementacija uključuje:
 - Geometric Brownian Motion (GBM)
 - Monte Carlo simulaciju portfelja
 - izračun statističkih pokazatelja
+
 Rust kod se pomoću `wasm-bindgen` prevodi u WebAssembly kako bi se mogao koristiti iz JavaScripta.
 
 ### JavaScript
@@ -72,6 +77,7 @@ Implementacije koriste isto:
 - broj godina
 - broj simulacija
 - sjeme generatora slučajnih brojeva
+
 Na taj način moguće je usporediti rezultate JavaScript i WASM implementacije.
 
 ## Pokretanje projekta
@@ -101,7 +107,7 @@ Za pokretanje mjerenja performansi otvorite:
 ```text
 http://localhost:8000/benchmark.html
 ```
-Benchmark stranica prikazuje ulazne parametre, status testiranja, progress bar te rezultate pojedinih mjerenja.
+Benchmark stranica prikazuje ulazne parametre, status testiranja te rezultate pojedinih mjerenja.
 ### Važno
 WebAssembly modul potrebno je izgraditi u `release` načinu:
 ```bash
