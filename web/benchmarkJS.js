@@ -364,7 +364,7 @@ async function runBenchmark() {
     startButton.disabled = false;
     startButton.textContent = "Pokreni ponovno";
 
-    console.log("Final benchmark results:",benchmarkResults);
+    console.log("Konačni rezultati testiranja:",benchmarkResults);
 }
 
 /* ============================================================
