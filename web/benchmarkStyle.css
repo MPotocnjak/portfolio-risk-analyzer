@@ -1,0 +1,189 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    color: #222;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 30px;
+}
+
+h1 {
+    margin-bottom: 8px;
+}
+
+.subtitle {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.card h2 {
+    margin-top: 0;
+    font-size: 20px;
+}
+
+.parameters {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+}
+
+.parameter {
+    background: #f7f8fa;
+    border-radius: 8px;
+    padding: 12px;
+}
+
+.parameter-label {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.parameter-value {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.portfolio-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.portfolio-table th,
+.portfolio-table td {
+    padding: 10px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.portfolio-table th {
+    background: #f7f8fa;
+}
+
+.matrix {
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.matrix th,
+.matrix td {
+    padding: 7px 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.matrix th {
+    background: #f7f8fa;
+}
+
+.progress-container {
+    margin-top: 15px;
+}
+
+.progress-bar-background {
+    width: 100%;
+    height: 28px;
+    background: #e2e5e9;
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    width: 0%;
+    height: 100%;
+    background: linear-gradient(90deg, #2563eb, #16a34a);
+    transition: width 0.2s ease;
+}
+
+.progress-text {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.status {
+    margin-top: 5px;
+    color: #666;
+}
+
+button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 7px;
+    background: #2563eb;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+button:disabled {
+    background: #9ca3af;
+    cursor: not-allowed;
+}
+
+.results-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.results-table th,
+.results-table td {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    text-align: right;
+}
+
+.results-table th:first-child,
+.results-table td:first-child {
+    text-align: left;
+}
+
+.results-table th {
+    background: #f7f8fa;
+}
+
+.pending {
+    color: #999;
+}
+
+.speedup {
+    font-weight: bold;
+    color: #15803d;
+}
+
+.completed {
+    color: #15803d;
+    font-weight: bold;
+}
+
+.running {
+    color: #2563eb;
+    font-weight: bold;
+}
+
+.portfolio-section {
+    margin-top: 20px;
+}
+
+.matrix-wrapper {
+    overflow-x: auto;
+}

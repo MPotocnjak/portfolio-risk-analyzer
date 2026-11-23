@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Normal RNG Test</title>
+</head>
+<body>
+
+<script type="module">
+    import { ChaCha8Rng } from "./jsRng.js";
+    import { standardNormal } from "./jsNormal.js";
+
+    const seed = 12345;
+
+    const rng = new ChaCha8Rng(seed);
+
+    const values = [];
+
+    for (let i = 0; i < 10; i++) {
+        values.push(standardNormal(rng));
+    }
+
+    console.log(values);
+</script>
+
+</body>
+</html>

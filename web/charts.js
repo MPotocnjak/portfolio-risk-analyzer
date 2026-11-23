@@ -4,14 +4,6 @@ let pathsChart;
 let currentResults = null;
 let currentPathSelection = null;
 
-function percentile(values, p) {
-    const index = (values.length - 1) * p;
-    const lower = Math.floor(index);
-    const upper = Math.ceil(index);
-    if (lower === upper) return values[lower];
-    return values[lower] + (values[upper] - values[lower]) * (index - lower);
-}
-
 function formatNumber(value) {
     return new Intl.NumberFormat("hr-HR", {
         maximumFractionDigits: 0
@@ -56,21 +48,15 @@ export function drawDistribution(results) {
 
     const min = sorted[0];
     const max = sorted[sorted.length - 1];
-    const p1 = percentile(sorted, 0.01);
-    const p5 = percentile(sorted, 0.05);
-    const p95 = percentile(sorted, 0.95);
-    const p99 = percentile(sorted, 0.99);
 
-    const zones = [[min, p1, 4], [p1, p5, 4], [p5, p95, 24], [p95, p99, 4], [p99, max, 4]];
-    const edges = [];
+    const binCount = 50;
+    const logMin = Math.log(min);
+    const logMax = Math.log(max);
 
-    zones.forEach(([start, end, count]) => {
-        if (end <= start) return;
-        const width = (end - start) / count;
-        for (let i = 0; i < count; i++) {
-            edges.push({ start: start + i * width, end: start + (i + 1) * width });
-        }
-    });
+    const edges = Array.from({ length: binCount }, (_, i) => ({
+        start: Math.exp(logMin + (logMax - logMin) * i / binCount),
+        end: Math.exp(logMin + (logMax - logMin) * (i + 1) / binCount)
+    }));
 
     const counts = edges.map(bin =>
         values.filter(value => value >= bin.start && value < bin.end).length
@@ -123,7 +109,9 @@ export function drawDistribution(results) {
             
                 const matching = simulations.filter(simulation =>
                     simulation.finalValue >= bin.start &&
-                    simulation.finalValue < bin.end
+                    ( simulation.finalValue < bin.end ||
+                        (binIndex === edges.length - 1 &&
+                         simulation.finalValue <= bin.end))
                 );
             
                 const selected = matching
@@ -155,14 +143,15 @@ export function drawDistribution(results) {
             },
             scales: {
                 x: {
+                    type: "logarithmic",
                     title: {
                         display: true,
-                        text: "Završna vrijednost (€)"
+                        text: "Završna vrijednost portfelja (€)"
                     },
                     ticks: {
                         autoSkip: true,
                         maxTicksLimit: 10,
-                        callback: (value, index) => formatNumber(edges[index].start)
+                        callback: value => formatNumber(value) //(value, index) => formatNumber(edges[index].start)
                     }
                 },
                 y: {

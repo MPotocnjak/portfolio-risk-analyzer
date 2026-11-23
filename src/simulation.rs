@@ -157,18 +157,15 @@ pub fn run_simulation(
             let mut yearly_return = 0.0;
 
             for (asset_index, asset) in portfolio.assets.iter().enumerate() {
-                let z = shocks[asset_index];
+                let shock = shocks[asset_index];
 
-                let gbm_return =
-                    (asset.expected_return
-                    - 0.5 * asset.volatility.powi(2)) * dt
-                    +
-                    asset.volatility * dt.sqrt() * z;
+                let gbm_return = (asset.expected_return
+                                - 0.5 * asset.volatility.powi(2)) * dt
+                                + asset.volatility * dt.sqrt() * shock;
 
                 let asset_growth = gbm_return.exp() - 1.0;
 
-                yearly_return +=
-                    asset.weight * asset_growth;
+                yearly_return += asset.weight * asset_growth;
             }
 
             portfolio_value *= 1.0 + yearly_return;

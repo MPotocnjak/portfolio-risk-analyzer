@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>JS vs WASM Simulation Test</title>
+</head>
+<body>
+
+<script type="module">
+import init, { run_monte_carlo } from "./pkg/portfolio_risk_analyzer.js";
+import { runSimulation } from "./jsSimulation.js";
+
+const portfolio = {
+    assets: [
+        {
+            name: "Dionice",
+            expected_return: 0.08,
+            volatility: 0.18,
+            weight: 0.35
+        },
+        {
+            name: "Obveznice",
+            expected_return: 0.04,
+            volatility: 0.07,
+            weight: 0.25
+        },
+        {
+            name: "Nekretnine",
+            expected_return: 0.06,
+            volatility: 0.14,
+            weight: 0.15
+        },
+        {
+            name: "Roba",
+            expected_return: 0.05,
+            volatility: 0.20,
+            weight: 0.10
+        },
+        {
+            name: "Gotovina",
+            expected_return: 0.02,
+            volatility: 0.01,
+            weight: 0.15
+        }
+    ],
+    correlations: [
+        [1.00, 0.30, 0.50, 0.20, 0.00],
+        [0.30, 1.00, 0.20, 0.10, 0.00],
+        [0.50, 0.20, 1.00, 0.30, 0.00],
+        [0.20, 0.10, 0.30, 1.00, 0.00],
+        [0.00, 0.00, 0.00, 0.00, 1.00]
+    ]
+};
+
+const config = {
+    initial_investment: 10000,
+    years: 30,
+    simulations: 1000,
+    seed: 987654321
+};
+
+const absoluteTolerance = 1e-10;
+const relativeTolerance = 1e-12;
+
+function valuesAreEqual(a, b) {
+    const difference = Math.abs(a - b);
+
+    if (difference <= absoluteTolerance) {
+        return true;
+    }
+
+    return difference <=
+        relativeTolerance * Math.max(1, Math.abs(a), Math.abs(b));
+}
+
+await init();
+
+const jsResults = runSimulation(portfolio, config);
+
+const wasmOutput = run_monte_carlo(portfolio, config);
+const wasmResults = wasmOutput.get("results");
+
+console.log("JS results:", jsResults);
+console.log("WASM results:", wasmResults);
+console.log("Comparison:");
+
+let differencesFound = false;
+let maxDifference = 0;
+let maxDifferenceInfo = null;
+
+for (let i = 0; i < config.simulations; i++) {
+    const jsResult = jsResults[i];
+    const wasmResult = wasmResults[i];
+
+    const jsFinalValue = jsResult.final_value;
+    const wasmFinalValue = wasmResult.get("final_value");
+    const finalDifference = jsFinalValue - wasmFinalValue;
+
+    maxDifference = Math.max(maxDifference, Math.abs(finalDifference));
+
+    if (!valuesAreEqual(jsFinalValue, wasmFinalValue)) {
+        differencesFound = true;
+        console.error(
+            `Difference found in simulation ${i} - final_value:`,
+            `JS = ${jsFinalValue}`,
+            `WASM = ${wasmFinalValue}`,
+            `difference = ${finalDifference}`
+        );
+    }
+
+    const jsYearlyValues = jsResult.yearly_values;
+    const wasmYearlyValues = wasmResult.get("yearly_values");
+
+    for (let year = 0; year < jsYearlyValues.length; year++) {
+        const jsValue = jsYearlyValues[year];
+        const wasmValue = wasmYearlyValues[year];
+        const difference = jsValue - wasmValue;
+
+        maxDifference = Math.max(maxDifference, Math.abs(difference));
+
+        if (!valuesAreEqual(jsValue, wasmValue)) {
+            differencesFound = true;
+            maxDifferenceInfo = {
+                simulation: i,
+                year,
+                jsValue,
+                wasmValue,
+                difference
+            };
+
+            console.error(
+                `Difference found in simulation ${i}, year ${year}:`,
+                `JS = ${jsValue}`,
+                `WASM = ${wasmValue}`,
+                `difference = ${difference}`
+            );
+        }
+    }
+}
+
+if (differencesFound) {
+    console.error(
+        "JS and WASM results are NOT identical within tolerance."
+    );
+    console.error(
+        "Maximum absolute difference:",
+        maxDifference
+    );
+    if (maxDifferenceInfo) {
+        console.error(
+            "Largest difference details:",
+            maxDifferenceInfo
+        );
+    }
+} else {
+    console.log(
+        "JS and WASM results are identical within tolerance."
+    );
+    console.log(
+        "Maximum absolute difference:",
+        maxDifference
+    );
+}
+</script>
+
+</body>
+</html>
